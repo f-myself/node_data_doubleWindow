@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Get data</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row mt-3">
+            <div class="col-6">
+                <input type="text" class="js_data">
+                <button type="button" class="js_send">Send</button>
+            </div>
+            <div class="col-6">
+                <button type="button" class="js_get_data">Get data</button>
+                <ul class="js_dataList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var input = document.querySelector('.js_data');
+        var btn_send = document.querySelector('.js_send');
+        var btn_getData = document.querySelector('.js_get_data');
+        var dataList = document.querySelector('.js_dataList');
+
+        btn_send.onclick = () => {
+            fetch('/my_data', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    value: input.value
+                })
+            })
+            .then((res) => {
+                console.log(res)
+            });
+            input.value = "";
+        };
+
+        btn_getData.onclick = () => {
+            dataList.innerHTML = "";
+            fetch('/all_data')
+                .then((res) => res.json())
+                .then((data) => {
+                    data.forEach((value) => {
+                        console.log(value);
+                        var newLi = document.createElement('li');
+                        newLi.innerHTML = value;
+                        dataList.appendChild(newLi);
+                    });
+                })
+        }
+
+    </script>
+</body>
+</html>
